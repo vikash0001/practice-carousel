@@ -11,7 +11,7 @@
 
 <body>
   <div class="carousel">
-    <button class="carousel_button carousel_button--left">prev</button>
+    <!-- <button class="carousel_button carousel_button--left">prev</button> -->
 
     <div class="carousel__track-container">
       <ul class="carousel__track">
@@ -21,7 +21,7 @@
       </ul>
     </div>
 
-    <button class="carousel_button carousel_button--right">next</button>
+    <!-- <button class="carousel_button carousel_button--right">next</button> -->
 
     <div class="carousel__nav">
       <button class="carousel__indicator current-dot"></button>
@@ -87,7 +87,7 @@
     var dots = Array.from(carouselNav.children)
 
     carouselNav.addEventListener("click", e => {
-
+       e.preventDefault();
       var targetDot = e.target.closest('button');
       if (!targetDot) return;
 
@@ -125,8 +125,43 @@
       var prevdot = currentDot.previousElementSibling;
       prevdot.classList.add('current-dot')
       currentDot.classList.remove('current-dot')
-       
       }
+
+      else if(diff < 0){
+        var currentSlide = document.querySelector(".current_slide");
+        var nextSlide = currentSlide.nextElementSibling;
+        moveslide(track, currentSlide, nextSlide);
+
+        var currentDot = document.querySelector(".current-dot");
+      var nextdot = currentDot.nextElementSibling;
+      nextdot.classList.add('current-dot')
+      currentDot.classList.remove('current-dot')
+
+      }
+    });
+
+    dragitem.addEventListener("touchstart",  (e) => {
+      e.preventDefault();
+      initialPosition = e.pageX;
+      console.log(initialPosition)
+    });
+
+    dragitem.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      finalPosition = e.pageX;
+      var diff = (finalPosition - initialPosition)
+      console.log(diff);
+      if (diff > 0) {
+        var currentSlide = document.querySelector(".current_slide");
+      var prevSlide = currentSlide.previousElementSibling;
+      moveslide(track, currentSlide, prevSlide);
+
+      var currentDot = document.querySelector(".current-dot");
+      var prevdot = currentDot.previousElementSibling;
+      prevdot.classList.add('current-dot')
+      currentDot.classList.remove('current-dot')
+      }
+
       else if(diff < 0){
         var currentSlide = document.querySelector(".current_slide");
         var nextSlide = currentSlide.nextElementSibling;
