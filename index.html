@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="carousel">
+    <button class="carousel_button carousel_button--left">prev</button>
+
+    <div class="carousel__track-container">
+      <ul class="carousel__track">
+        <li class="carousel__slide current_slide"><img class="carousel__image" src="./img/img1.png" alt=""></li>
+        <li class="carousel__slide"><img class="carousel__image" src="./img/img2.png" alt=""></li>
+        <li class="carousel__slide"><img class="carousel__image" src="./img/img3.png" alt=""></li>
+      </ul>
+    </div>
+
+    <button class="carousel_button carousel_button--right">next</button>
+
+    <div class="carousel__nav">
+      <button class="carousel__indicator current-dot"></button>
+      <button class="carousel__indicator"></button>
+      <button class="carousel__indicator"></button>
+    </div>
+  </div>
+
+  <script>
+    var track = document.querySelector(".carousel__track");
+    var list = document.querySelectorAll(".carousel__slide");
+    var prevBtn = document.querySelector(".carousel_button--left");
+    var nextBtn = document.querySelector(".carousel_button--right");
+    var slidewidth = list[0].getBoundingClientRect().width;
+
+    //arranging the slide
+
+    list.forEach((item, index) => {
+      item.style.left = slidewidth * index + 'px';
+    });
+
+    //main function
+
+    var moveslide = (track, currentSlide, targetSlide) => {
+      track.style.transform = 'translateX(-' + targetSlide.style.left + ')'
+      currentSlide.classList.remove("current_slide");
+      targetSlide.classList.add("current_slide");
+    };
+
+
+    //attaching function to the previous button
+
+    // prevBtn.addEventListener("click", e => {
+    //   var currentSlide = document.querySelector(".current_slide");
+    //   var prevSlide = currentSlide.previousElementSibling;
+    //   moveslide(track, currentSlide, prevSlide);
+
+
+    //   var currentDot = document.querySelector(".current-dot");
+    //   var prevdot = currentDot.previousElementSibling;
+    //   prevdot.classList.add('current-dot')
+    //   currentDot.classList.remove('current-dot')
+    // });
+
+    //attaching function to the next button
+
+    // nextBtn.addEventListener("click", e => {
+
+    //   var currentSlide = document.querySelector(".current_slide");
+    //   var nextSlide = currentSlide.nextElementSibling;
+    //   moveslide(track, currentSlide, nextSlide);
+
+
+    //   var currentDot = document.querySelector(".current-dot");
+    //   var nextdot = currentDot.nextElementSibling;
+    //   nextdot.classList.add('current-dot')
+    //   currentDot.classList.remove('current-dot')
+    // });
+
+
+
+    var carouselNav = document.querySelector(".carousel__nav");
+    var dots = Array.from(carouselNav.children)
+
+    carouselNav.addEventListener("click", e => {
+
+      var targetDot = e.target.closest('button');
+      if (!targetDot) return;
+
+      var currentSlide = document.querySelector(".current_slide");
+      var currentDot = document.querySelector(".current-dot");
+      var dotIndex = dots.findIndex(item => item === targetDot);
+      var targetSlide = list[dotIndex];
+      moveslide(track, currentSlide, targetSlide);
+
+      currentDot.classList.remove('current-dot');
+      targetDot.classList.add('current-dot');
+      var nextdot = currentDot.nextElementSibling;
+    });
+
+
+    var dragitem = document.querySelector(".carousel__track-container");
+
+    dragitem.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      initialPosition = e.pageX;
+      console.log(initialPosition)
+    });
+
+    dragitem.addEventListener("mouseup", (e) => {
+      e.preventDefault();
+      finalPosition = e.pageX;
+      var diff = (finalPosition - initialPosition)
+      console.log(diff);
+      if (diff > 0) {
+        var currentSlide = document.querySelector(".current_slide");
+      var prevSlide = currentSlide.previousElementSibling;
+      moveslide(track, currentSlide, prevSlide);
+
+      var currentDot = document.querySelector(".current-dot");
+      var prevdot = currentDot.previousElementSibling;
+      prevdot.classList.add('current-dot')
+      currentDot.classList.remove('current-dot')
+       
+      }
+      else if(diff < 0){
+        var currentSlide = document.querySelector(".current_slide");
+        var nextSlide = currentSlide.nextElementSibling;
+        moveslide(track, currentSlide, nextSlide);
+
+        var currentDot = document.querySelector(".current-dot");
+      var nextdot = currentDot.nextElementSibling;
+      nextdot.classList.add('current-dot')
+      currentDot.classList.remove('current-dot')
+
+      }
+    });
+
+
+
+
+
+
+
+
+  </script>
+</body>
+
+</html>
